@@ -43,7 +43,6 @@ export class Oracle {
   }
 
   async useWallet(src: string) {
-
     const isExist = fs.existsSync(src);
     let walletData: any = {}
     if (isExist) {
@@ -51,12 +50,11 @@ export class Oracle {
     }
     console.log(walletData)
     let oracle;
-    if (!walletData.publicKey) {
+    if (!walletData[0]) {
       oracle = await helpers.generateWallet(this.parameters.rpcClient);
-      fs.writeFileSync(src, JSON.stringify(oracle.keys))
+      fs.writeFileSync(src, JSON.stringify(oracle.mnemonic))
 
       await uploadWallet(this.parameters.oracleKey, oracle.address, this.parameters.apiKey)
-
 
     } else {
       oracle = await helpers.restoreWallet(this.parameters.rpcClient, walletData);
@@ -87,9 +85,11 @@ export class Oracle {
         .storeUint(0, 64) // queryid
         .storeRef(data)
         .endCell()
-      return await helpers.createTransaction(this.oracle.wallet, this.oracle.keys, Address.parseFriendly(masterAddress).address, updateBody);
+      console.log(this.oracle.mnemonic
+      )
+      const keys = await mnemonicToPrivateKey(this.oracle.mnemonic);
+      return await helpers.createTransaction(this.oracle.wallet, keys, Address.parseFriendly(masterAddress).address, updateBody);
     }
-
     await this.parameters.rpcClient.sendExternalMessage(this.oracle.wallet, await updateOnMasterByOracleTrx()) // signup (deploy client contract) 
   }
 }

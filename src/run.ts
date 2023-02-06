@@ -2,8 +2,8 @@ import { Oracle } from './lib/';
 import { beginCell } from 'ton'
 import { getTonToUsdPrice } from './lib/helpers'
 const params = {
-  apiKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lIjoiVHVlIEphbiAzMSAyMDIzIDE5OjEyOjU0IEdNVCswMTAwIChDZW50cmFsIEV1cm9wZWFuIFN0YW5kYXJkIFRpbWUpIiwid2FsbGV0IjoiRVFCVUw5YU00SUthQmVyWXY4aFpQMXFMZ1JuRVBuVjJEWXN3TzBhR3N5d1pIc1ZXIiwiaWF0IjoxNjc1MTg4Nzc0fQ.0FXGN_YgMqF79WWXDDP-8hLDMZj_eOpPv2rgWCpj-gc',
-  oracleKey: 'gRik2jmx7ENyJIIy'
+  apiKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lIjoiVHVlIEphbiAzMSAyMDIzIDE5OjEyOjU0IEdNVCswMTAwIChDZW50cmFsIEV1cm9wZWFuIFN0YW5kYXJkIFRpbWUpIiwid2FsbGV0IjoiRVFCVUw5YU00SUthQmVyWXY4aFpQMXFMZ1JuRVBuVjJEWXN3TzBhR3N5d1pIc1ZXIiwiaWF0IjoxNjc1MTg4Nzc0fQ.0FXGN_YgMqF79WWXDDP-8hLDMZj_eOpPv2rgWCpj-gc",
+  oracleKey: 'eOJYXKZdM57rdlxj'
 }
 
 const oracle = new Oracle(params)

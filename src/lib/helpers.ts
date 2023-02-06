@@ -77,6 +77,7 @@ export const deploySmartContract = async (wallet: WalletContract, keyPair: KeyPa
 
 export const createTransaction = async (wallet: WalletContract, keyPair: KeyPair, toAddress: Address, body: Cell, value?: BN) => {
   let seqno: number = await wallet.getSeqNo();
+  console.log(keyPair.secretKey)
   const trx = wallet.createTransfer({
     secretKey: keyPair.secretKey,
     seqno: seqno,
@@ -150,16 +151,17 @@ export const generateWallet = async (client: TonClient) => {
     WalletV3R2Source.create({ publicKey: keys.publicKey, workchain: 0 })
   );
   const address = wallet.address.toFriendly();
-  return { keys, wallet, address }
+  return { mnemonic, keys, wallet, address }
 }
 
-export const restoreWallet = async (client: TonClient, keys: KeyPair) => {
+export const restoreWallet = async (client: TonClient, mnemonic: string[]) => {
+  const keys = await mnemonicToPrivateKey(mnemonic);
   const wallet = WalletContract.create(
     client,
     WalletV3R2Source.create({ publicKey: keys.publicKey, workchain: 0 })
   );
   const address = wallet.address.toFriendly();
-  return { keys, wallet, address }
+  return { mnemonic, keys, wallet, address }
 }
 
 export const sleep = async (val: number) => new Promise((res, _) => {
