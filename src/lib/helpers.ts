@@ -1,10 +1,3 @@
-// TODO
-// get api key
-// wallet gen
-// store in wallet json
-// add wallet to user acc by API endpoint 
-// setup waiter for master contract (we can fetch it from API) address
-// when address is exist start to send OP:UPDATE to it
 import { mnemonicNew, KeyPair, mnemonicToPrivateKey } from "ton-crypto";
 import BN from 'bn.js'
 import {

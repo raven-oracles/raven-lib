@@ -17,6 +17,7 @@ import fs from 'fs'
 import CoinGecko from "coingecko-api";
 import * as helpers from './helpers'
 import { uploadWallet, getMasterAddress } from './requests'
+import qrcode from "qrcode-terminal";
 
 export type OracleParameters = {
   oracleKey?: string;
@@ -48,14 +49,16 @@ export class Oracle {
     if (isExist) {
       walletData = JSON.parse(fs.readFileSync(src).toString())
     }
-    console.log(walletData)
     let oracle;
     if (!walletData[0]) {
       oracle = await helpers.generateWallet(this.parameters.rpcClient);
+      console.log(`Deposit 1TON to wallet ${oracle.address}`)
+      const linkForOwner = `ton://transfer/${oracle.address}?amount=1000000000`
+      qrcode.generate(linkForOwner, { small: true });
+      const depositer1 = (await helpers.depositWaiter(this.parameters.rpcClient, oracle.address)).toFriendly();
+      console.log(`Depositer to owner wallet: ${depositer1}`)
       fs.writeFileSync(src, JSON.stringify(oracle.mnemonic))
-
       await uploadWallet(this.parameters.oracleKey, oracle.address, this.parameters.apiKey)
-
     } else {
       oracle = await helpers.restoreWallet(this.parameters.rpcClient, walletData);
     }
@@ -78,15 +81,12 @@ export class Oracle {
   }
 
   async sendUpdate(masterAddress: string, data: Cell) {
-
     const updateOnMasterByOracleTrx = async () => {
       const updateBody = beginCell()
         .storeUint(helpers.OPS.Update, 32) // opcode
         .storeUint(0, 64) // queryid
         .storeRef(data)
         .endCell()
-      console.log(this.oracle.mnemonic
-      )
       const keys = await mnemonicToPrivateKey(this.oracle.mnemonic);
       return await helpers.createTransaction(this.oracle.wallet, keys, Address.parseFriendly(masterAddress).address, updateBody);
     }
