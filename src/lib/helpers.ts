@@ -16,10 +16,16 @@ import CoinGecko from "coingecko-api";
 
 const CoinGeckoClient = new CoinGecko();
 
-export const getTonToUsdPrice = async () => {
-  return new BN((await CoinGeckoClient.coins.fetch("the-open-network", {})).data
-    .market_data.current_price.usd * 100);
-}
+export const getTonToUsdPrice: any = () => new Promise(async (res) => {
+  try {
+    return res(new BN((await CoinGeckoClient.coins.fetch("the-open-network", {})).data
+      .market_data.current_price.usd * 100));
+  } catch (e) {
+    console.log(e);
+    await sleep(1000);
+    return res(await getTonToUsdPrice())
+  }
+})
 
 enum SendMode {
   CARRRY_ALL_REMAINING_BALANCE = 128,
